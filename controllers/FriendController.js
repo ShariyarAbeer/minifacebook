@@ -1,7 +1,10 @@
 const { makeToken, Auth } = require('../helpers/utls');
 const FriendShipT = require('../Models/friendshipTransactionModel');
 const UserController = require('./UserController');
+const FriendShip = require('../Models/friendship');
 const User = require('../Models/user');
+const moment = require('moment');
+
 
 
 module.exports = {
@@ -19,7 +22,20 @@ module.exports = {
                     }
                 })
             }
-            let isFriend = await FriendShipT.find({})
+            let isFriend = await FriendShip.find({ fromPerson: from, })
+            // console.log(isFriend);
+            if (isFriend.length != 0) {
+                if (isFriend[0].type === "Friend") {
+                    proceed = false;
+                    res.send({
+                        type: "Already Friend",
+                        data: {
+                            msg: "You guys are already friend"
+                        }
+                    })
+                }
+
+            }
 
             if (proceed) {
                 let newFriendRequst = new FriendShipT({
@@ -161,42 +177,62 @@ module.exports = {
 
         }
     },
-    // acceptFriendRequst: async (req, res) => {
+    acceptFriendRequst: async (req, res) => {
 
-    //     try {
-    //         const { usertoken, sessiontoken } = req.headers
-    //         const { user } = req.params
-    //         let proceed = true;
-    //         if (await Auth(usertoken, sessiontoken) === false) {
-    //             proceed = false;
-    //             res.send({
-    //                 type: "Error",
-    //                 data: {
-    //                     msg: "Mismatch"
-    //                 }
-    //             })
-    //         }
+        try {
+            const { usertoken, sessiontoken } = req.headers
+            const { from, to, } = req.body
+            let proceed = true;
+            if (await Auth(usertoken, sessiontoken) === false) {
+                proceed = false;
+                res.send({
+                    type: "Error",
+                    data: {
+                        msg: "Mismatch"
+                    }
+                })
+            }
+            let isFriend = await FriendShip.find({ fromPerson: from, })
+            console.log(isFriend);
+            if (isFriend.length != 0) {
+                if (isFriend[0].type === "Friend") {
+                    proceed = false;
+                    res.send({
+                        type: "Already Friend",
+                        data: {
+                            msg: "You guys are already friend"
+                        }
+                    })
+                }
 
-    //         if (proceed) {
-    //             let userFriendRequst = await FriendShipT.find({ to: user });
+            }
 
-    //             res.send({
-    //                 type: "Your FrindRequst",
-    //                 data: {
-    //                     items: results
+            if (proceed) {
+                let friendShip = new FriendShip({
+                    'fromPerson': from,
+                    'toFriend': to,
+                    'type': 'Friend'
 
-    //                 },
-    //             })
-    //         }
+                })
+                let friendShipTUpdate = await FriendShipT.findOneAndUpdate({ from: from }, { $set: { actionTime: moment.utc().format('YYYY-MM-DD HH:mm:ss') } }, { new: true });
+                let frindShipDone = await friendShip.save();
+                res.send({
+                    type: "FrindRequst accepted",
+                    data: {
+                        items: frindShipDone
+
+                    },
+                })
+            }
 
 
-    //     } catch (error) {
-    //         res.send({
-    //             type: "Catch Error",
-    //             data: error
-    //         })
-    //         console.log(error)
+        } catch (error) {
+            res.send({
+                type: "Catch Error",
+                data: error
+            })
+            console.log(error)
 
-    //     }
-    // }
+        }
+    }
 }

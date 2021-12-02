@@ -12,7 +12,7 @@ router.post('/account/logout', UserController.logout);
 
 router.post('/post/create', PostController.createPost);
 router.post('/friend/requst', FriendController.sendRequst);
-// router.post('/friend/accept', FriendController.acceptFriendRequst);
+router.post('/friend/accept', FriendController.acceptFriendRequst);
 
 
 router.get('/all/requst', FriendController.allRequst);
