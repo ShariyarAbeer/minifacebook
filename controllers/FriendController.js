@@ -1,5 +1,5 @@
 const { makeToken, Auth } = require('../helpers/utls');
-const FriendShp = require('../Models/friendShp');
+const FriendShipT = require('../Models/friendshipTransactionModel');
 const UserController = require('./UserController');
 const User = require('../Models/user');
 
@@ -19,10 +19,10 @@ module.exports = {
                     }
                 })
             }
-            let isFriend = await FriendShp.find({})
+            let isFriend = await FriendShipT.find({})
 
             if (proceed) {
-                let newFriendRequst = new FriendShp({
+                let newFriendRequst = new FriendShipT({
                     'token': makeToken({ label: 'friendToken' }),
                     'from': from,
                     'to': to,
@@ -66,7 +66,7 @@ module.exports = {
                 })
             }
             if (proceed) {
-                let allRequst = await FriendShp.find();
+                let allRequst = await FriendShipT.find();
                 let results = [];
 
                 for (let i = 0; i < allRequst.length; i++) {
@@ -122,7 +122,7 @@ module.exports = {
             }
 
             if (proceed) {
-                let userFriendRequst = await FriendShp.find({ to: user });
+                let userFriendRequst = await FriendShipT.find({ to: user });
                 let results = [];
 
                 for (let i = 0; i < userFriendRequst.length; i++) {
@@ -178,7 +178,7 @@ module.exports = {
     //         }
 
     //         if (proceed) {
-    //             let userFriendRequst = await FriendShp.find({ to: user });
+    //             let userFriendRequst = await FriendShipT.find({ to: user });
 
     //             res.send({
     //                 type: "Your FrindRequst",

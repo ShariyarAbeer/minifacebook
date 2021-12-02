@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const FriendShpSchema = mongoose.Schema({
+const FriendShipTSchema = mongoose.Schema({
     'token': {
         type: String
     },
@@ -21,4 +21,4 @@ const FriendShpSchema = mongoose.Schema({
         timestamps: true
     }
 )
-module.exports = mongoose.model('FriendShp', FriendShpSchema);
+module.exports = mongoose.model('FriendShipT', FriendShipTSchema);
