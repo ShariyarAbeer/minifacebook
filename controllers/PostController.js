@@ -1,8 +1,10 @@
 const argon2 = require('argon2');
 const { makeToken, Auth } = require('../helpers/utls');
+const CommentModel = require('../Models/commentModel');
 const PostModel = require('../Models/postModel');
 const SessionModel = require('../Models/postModel');
 const Reactions = require('../Models/reactions');
+const ReplyCommentModel = require('../Models/replyCommentModel');
 
 module.exports = {
     createPost: async function (req, res) {
@@ -154,6 +156,116 @@ module.exports = {
                         msg: singleToken
                     }
                 })
+            }
+
+
+
+
+        } catch (error) {
+            res.send({
+                type: "Catch Error",
+                data: error
+            })
+            console.log(error)
+        }
+    },
+    postComment: async (req, res) => {
+        try {
+            // token auto
+            //postToken
+            // commenterToken 
+            // content 
+            // posterToken
+            // status
+            const { postToken, posterToken, content, status } = req.body
+            const { usertoken, sessiontoken } = req.headers
+            let proceed = true;
+            if (await Auth(usertoken, sessiontoken) === false) {
+                proceed = false;
+                res.send({
+                    type: "Error",
+                    data: {
+                        msg: "Mismatch"
+                    }
+                })
+            }
+
+            if (proceed) {
+                let newComment = new CommentModel({
+                    token: makeToken({ label: 'CommentToken' }),
+                    postToken: postToken,
+                    commenterToken: usertoken,
+                    content: content,
+                    posterToken: posterToken,
+                    status: status,
+
+                });
+                let newCommentDone = await newComment.save();
+                res.send({
+                    type: "Comment Done",
+                    data: {
+                        status: status,
+                        msg: newCommentDone
+                    }
+                })
+
+            }
+
+
+
+
+        } catch (error) {
+            res.send({
+                type: "Catch Error",
+                data: error
+            })
+            console.log(error)
+        }
+    },
+    replyComment: async (req, res) => {
+        try {
+            // thisToken auto
+            //content
+            // commentToken
+            // postToken
+            // replyerToken
+            // commenterToken
+            // posterToken
+            // status
+            const { content, commentToken, postToken, commenterToken, posterToken, status } = req.body
+            const { usertoken, sessiontoken } = req.headers
+            let proceed = true;
+            if (await Auth(usertoken, sessiontoken) === false) {
+                proceed = false;
+                res.send({
+                    type: "Error",
+                    data: {
+                        msg: "Mismatch"
+                    }
+                })
+            }
+
+            if (proceed) {
+                let newComment = new ReplyCommentModel({
+                    thisToken: makeToken({ label: 'CommentToken' }),
+                    commentToken: commentToken,
+                    postToken: postToken,
+                    content: content,
+                    replyerToken: usertoken,
+                    commenterToken: commenterToken,
+                    posterToken: posterToken,
+                    status: status,
+
+                });
+                let newCommentDone = await newComment.save();
+                res.send({
+                    type: "Reply Comment Done",
+                    data: {
+                        status: status,
+                        msg: newCommentDone
+                    }
+                })
+
             }
 
 

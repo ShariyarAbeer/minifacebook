@@ -15,6 +15,8 @@ router.post('/friend/requst', FriendController.sendRequst);
 router.post('/friend/accept', FriendController.acceptFriendRequst);
 router.post('/post/react', PostController.reactPost);
 router.post('/post/unreact', PostController.unReactPost);
+router.post('/post/comment', PostController.postComment);
+router.post('/post/reply', PostController.replyComment);
 
 
 router.get('/all/requst', FriendController.allRequst);
