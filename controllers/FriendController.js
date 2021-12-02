@@ -125,7 +125,7 @@ module.exports = {
 
         try {
             const { usertoken, sessiontoken } = req.headers
-            const { user } = req.body
+            const { user } = req.params
             let proceed = true;
             if (await Auth(usertoken, sessiontoken) === false) {
                 proceed = false;

@@ -13,6 +13,8 @@ router.post('/account/logout', UserController.logout);
 router.post('/post/create', PostController.createPost);
 router.post('/friend/requst', FriendController.sendRequst);
 router.post('/friend/accept', FriendController.acceptFriendRequst);
+router.post('/post/react', PostController.reactPost);
+router.post('/post/unreact', PostController.unReactPost);
 
 
 router.get('/all/requst', FriendController.allRequst);
